@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII tree generator</title>
+    <style>
+        body {
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            display: flex;
+            align-items: stretch;
+            background: #fff;
+            color: #222;
+            transition: background 0.2s, color 0.2s;
+        }
+        .dark-mode {
+            background: #181a1b;
+            color: #eee;
+        }
+
+        #input, #output {
+            font-size: 16px;
+            font-family: monospace;
+            flex: 1 1 50%;
+            margin: 8px;
+            padding: 8px;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        #input {
+            background: #fff;
+            color: #222;
+            border: 1px solid #ccc;
+        }
+
+        .dark-mode #input {
+            background: #23272a;
+            color: #eee;
+            border-color: #444;
+        }
+
+        #output {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .dark-mode #output {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .button-row {
+            position: absolute;
+            top: 12px;
+            right: 24px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .theme-toggle, .copy-btn {
+            min-width: 44px;
+            width: 44px;
+            height: 36px;
+            background: none;
+            border: 1px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            color: inherit;
+            background-color: rgba(200,200,200,0.2);
+            transition: background 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .dark-mode .theme-toggle, .dark-mode .copy-btn {
+            border-color: #aaa;
+            background-color: rgba(50,50,50,0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button-row">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">🌙</button>
+        <button class="copy-btn" id="copy-btn" title="Copy output">📋</button>
+    </div>
+    <textarea id="input"></textarea>
+    <pre id="output"></pre>
+    <script src="tree.js"></script>
+    <script>
+        // Theme toggle logic
+        const body = document.body;
+        const toggleBtn = document.getElementById('theme-toggle');
+        function setTheme(dark) {
+            if (dark) {
+                body.classList.add('dark-mode');
+                toggleBtn.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                toggleBtn.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        // Load theme from localStorage
+        const saved = localStorage.getItem('theme');
+        setTheme(saved === 'dark');
+        toggleBtn.onclick = () => setTheme(!body.classList.contains('dark-mode'));
+
+        // Copy button logic
+        const copyBtn = document.getElementById('copy-btn');
+        const output = document.getElementById('output');
+        copyBtn.onclick = () => {
+            const text = output.textContent;
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                copyBtn.textContent = '✅';
+                setTimeout(() => copyBtn.textContent = '📋', 1200);
+            });
+        };
+    </script>
+</body>
+
+</html>
